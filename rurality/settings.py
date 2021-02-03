@@ -4,7 +4,6 @@ from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = 'nt=2487kn4yc)r20suy07@a_difwj_8b$!=i5l7^hq#^t@#ss-'
 
 DEBUG = False
@@ -62,13 +61,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rurality.wsgi.application'
 
-
 # Database
 MYSQL_HOST = '127.0.0.1'
 MYSQL_PORT = 3306
 MYSQL_NAME = 'rurality'
 MYSQL_USER = 'root'
-MYSQL_PASSWORD = 'root'
+MYSQL_PASSWORD = '123456'
 
 DATABASES = {
     'default': {
@@ -88,7 +86,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -104,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Shanghai'
@@ -115,9 +111,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
-
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
@@ -128,6 +122,7 @@ ONLYONE_REDIS_DB = 4
 
 # 有关celery配置
 from kombu import Exchange, Queue
+
 # celery configs
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672//')
 CELERY_TIMEZONE = 'Asia/Shanghai'
@@ -144,7 +139,8 @@ CELERY_DEFAULT_QUEUE = 'default'
 CELERY_TASK_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default', queue_arguments={'x-max-priority': 20}),
     Queue('low_priority', Exchange('low_priority'), routing_key='low_priority', queue_arguments={'x-max-priority': 10}),
-    Queue('high_priority', Exchange('high_priority'), routing_key='high_priority', queue_arguments={'x-max-priority': 30}),
+    Queue('high_priority', Exchange('high_priority'), routing_key='high_priority',
+          queue_arguments={'x-max-priority': 30}),
 )
 
 # 有关优先级队列启动问题
@@ -188,7 +184,12 @@ LOGGING = {
             'format': '%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s'
         }
     },
+
     'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
         'info': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join(LOG_DIR, 'info.log'),
@@ -215,6 +216,11 @@ LOGGING = {
         }
     },
     'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
         'gunicorn': {
             'handlers': ['request'],
             'level': 'INFO',

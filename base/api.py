@@ -8,7 +8,7 @@ from django.views import View
 from base import errors
 from base.check_params import CheckParams
 from utils import time_utils
-
+import traceback
 
 error_logger = logging.getLogger('error')
 access_logger = logging.getLogger('gunicorn')
@@ -88,6 +88,7 @@ class BaseApi(View):
             msg = e.errmsg
         except Exception as e:
             # TODO: 记录log
+            traceback.print_exc()
             error_logger.exception(e)
             code = errors.BaseError.errcode
             msg = errors.BaseError.errmsg

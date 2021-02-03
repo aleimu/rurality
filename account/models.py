@@ -33,6 +33,8 @@ class UserModel(BaseModel):
     phone = models.CharField('联系方式', max_length=64, null=True, default='')
     status = models.IntegerField('状态', choices=ST_CHOICES, default=ST_NORMAL)
     typ = models.SmallIntegerField('类型', choices=TYP_CHOICES, default=TYP_NORMAL)
+    code = models.SmallIntegerField('用户编号', choices=TYP_CHOICES,
+                                    default=TYP_NORMAL)  # name是重命名数据库字段,并不是备注...
 
     class Meta:
         db_table = 'user'
