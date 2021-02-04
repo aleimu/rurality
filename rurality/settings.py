@@ -1,3 +1,5 @@
+__doc__ = "全局配置文件"
+
 import os
 from pathlib import Path
 from corsheaders.defaults import default_headers
@@ -6,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'nt=2487kn4yc)r20suy07@a_difwj_8b$!=i5l7^hq#^t@#ss-'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -19,6 +21,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'token',
 ]
 
+# app集合
 INSTALLED_APPS = [
     'account',
     'business.project',
@@ -36,9 +39,11 @@ INSTALLED_APPS = [
     'component.jenkins',
 ]
 
+# 中间件集合
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 
 ROOT_URLCONF = 'rurality.urls'

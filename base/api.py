@@ -1,20 +1,21 @@
+import time
+import traceback
 import logging
 import ujson as json
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.core.signing import TimestampSigner
 from django.core.signing import SignatureExpired
-
 from django.views import View
 from base import errors
 from base.check_params import CheckParams
-from utils import time_utils
-import traceback
+from pprint import pprint
 
 error_logger = logging.getLogger('error')
 access_logger = logging.getLogger('gunicorn')
 
 
 class BaseApi(View):
+    """Rest Api"""
     NEED_LOGIN = True
     NEED_PERMISSION = True
     need_params = {}
@@ -56,14 +57,25 @@ class BaseApi(View):
         if not has_permission(user_id, url):
             raise errors.CommonError('权限不足，无法进行此操作')
 
-    def _pre_handle(self, request):
+    def _pre_handle(self, request: HttpRequest):
         '''
-        请求处理前处理
+        请求预处理
         '''
         if self.NEED_LOGIN:
             self._identification(request)
             if self.NEED_PERMISSION:
                 self._permission(request.user_id, request.path)
+        request._start_time = time.time()  # 可以设置request,改变或新增请求上下文
+
+    def _next_handle(self, request: HttpRequest, result: dict):
+        """下一步"""
+        time.sleep(1)
+
+    def _end_handle(self, request: HttpRequest, result: dict):  # 设置下类型注释,方便idea代码提示
+        """请求后处理"""
+        if hasattr(request, '_start_time'):
+            pprint("processing request spends time {} seconds".format(time.time() - request._start_time))
+        return HttpResponse(json.dumps(result), content_type='application/json')
 
     def dispatch(self, request, *args, **kwargs):
         code = 0
@@ -84,6 +96,7 @@ class BaseApi(View):
                 params['operator'] = request.user
             data = handler(request, params, *args, **kwargs)
         except errors.BaseError as e:
+            traceback.print_exc()
             code = e.errcode
             msg = e.errmsg
         except Exception as e:
@@ -97,6 +110,7 @@ class BaseApi(View):
             'msg': msg,
             'data': data,
         }
+        # pprint(result)
         if request.method.lower() != 'get':
             log_data = {
                 'url': request.get_full_path(),
@@ -105,7 +119,9 @@ class BaseApi(View):
                 'result': result,
             }
             access_logger.info(log_data)
-        return HttpResponse(json.dumps(result), content_type='application/json')
+        pprint(result)
+        self._next_handle(request, result)
+        return self._end_handle(request, result)
 
     def check_params(self, request):
         '''

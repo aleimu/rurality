@@ -19,7 +19,7 @@ max_requests = 1000
 # 随机增加偏移量range(1, max_requests_jitter)，与max_requests配合，防止多个worker同时重启
 max_requests_jitter = 100
 
-bind = "0.0.0.0:18785"
+bind = "0.0.0.0:8001"
 chdir = CUR_DIR
 preload = True
 worker_class = 'gevent'
