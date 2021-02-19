@@ -4,9 +4,14 @@
 
 - 将之前整理的合并过来
 - 尝试改变一些组件功能
-- [异步视图](https://docs.djangoproject.com/zh-hans/3.0/topics/async/)
-- [请求处理流程](https://blog.csdn.net/bingjia103126/article/details/105466669)
-- [请求处理流程](https://img-blog.csdnimg.cn/20200412115544581.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JpbmdqaWExMDMxMjY=,size_16,color_FFFFFF,t_70)
+
+
+![异步视图](https://docs.djangoproject.com/zh-hans/3.0/topics/async/)
+![请求处理流程](https://blog.csdn.net/bingjia103126/article/details/105466669)
+![请求处理流程](https://img-blog.csdnimg.cn/20200412115544581.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JpbmdqaWExMDMxMjY=,size_16,color_FFFFFF,t_70)
+![django请求处理流程](https://images2018.cnblogs.com/blog/867021/201804/867021-20180409234112982-196913305.png)
+![中间件处理流程](https://images2018.cnblogs.com/blog/867021/201804/867021-20180409214356226-286908304.png)
+![中间件处理流程2](https://images2018.cnblogs.com/blog/867021/201804/867021-20180409214433968-2137571775.png)
 
 # settings的懒加载
 
